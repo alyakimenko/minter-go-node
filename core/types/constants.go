@@ -10,8 +10,8 @@ const (
 )
 
 var (
-	coinTestnet = StrToCoinSymbol("MNT")
-	coinMainnet = StrToCoinSymbol("BIP")
+	coinTestnet = StrToCoinSymbol("ODIN")
+	coinMainnet = StrToCoinSymbol("ODIN")
 )
 
 func GetBaseCoin() CoinSymbol {
