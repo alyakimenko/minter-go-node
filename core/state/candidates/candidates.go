@@ -20,7 +20,7 @@ const (
 	CandidateStatusOffline = 0x01
 	CandidateStatusOnline  = 0x02
 
-	UnbondPeriod              = 518400
+	UnbondPeriod              = 259200
 	MaxDelegatorsPerCandidate = 1000
 
 	mainPrefix       = 'c'
