@@ -3,7 +3,6 @@ package validators
 import (
 	"fmt"
 	eventsdb "github.com/MinterTeam/events-db"
-	"github.com/MinterTeam/minter-go-node/core/dao"
 	"github.com/MinterTeam/minter-go-node/core/developers"
 	"github.com/MinterTeam/minter-go-node/core/state/bus"
 	"github.com/MinterTeam/minter-go-node/core/state/candidates"
@@ -163,19 +162,6 @@ func (v *Validators) PayRewards(height uint64) {
 			totalReward := big.NewInt(0).Set(validator.GetAccumReward())
 			remainder := big.NewInt(0).Set(validator.GetAccumReward())
 
-			// pay commission to DAO
-			DAOReward := big.NewInt(0).Set(totalReward)
-			DAOReward.Mul(DAOReward, big.NewInt(int64(dao.Commission)))
-			DAOReward.Div(DAOReward, big.NewInt(100))
-			v.bus.Accounts().AddBalance(dao.Address, types.GetBaseCoin(), DAOReward)
-			remainder.Sub(remainder, DAOReward)
-			v.bus.Events().AddEvent(uint32(height), eventsdb.RewardEvent{
-				Role:            eventsdb.RoleDAO.String(),
-				Address:         dao.Address,
-				Amount:          DAOReward.String(),
-				ValidatorPubKey: validator.PubKey,
-			})
-
 			// pay commission to Developers
 			DevelopersReward := big.NewInt(0).Set(totalReward)
 			DevelopersReward.Mul(DevelopersReward, big.NewInt(int64(developers.Commission)))
@@ -190,7 +176,6 @@ func (v *Validators) PayRewards(height uint64) {
 			})
 
 			totalReward.Sub(totalReward, DevelopersReward)
-			totalReward.Sub(totalReward, DAOReward)
 
 			// pay commission to validator
 			validatorReward := big.NewInt(0).Set(totalReward)
