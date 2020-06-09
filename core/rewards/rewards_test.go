@@ -16,15 +16,19 @@ func TestGetRewardForBlock(t *testing.T) {
 	data := []Results{
 		{
 			Block:  1,
-			Result: helpers.BipToPip(big.NewInt(333)),
+			Result: helpers.BipToPip(big.NewInt(50)),
 		},
 		{
-			Block:  43702611,
-			Result: helpers.BipToPip(big.NewInt(68)),
+			Block:  5703500,
+			Result: helpers.BipToPip(big.NewInt(380)),
 		},
 		{
-			Block:  36600000,
-			Result: helpers.BipToPip(big.NewInt(150)),
+			Block:  18662405,
+			Result: helpers.BipToPip(big.NewInt(6670)),
+		},
+		{
+			Block: lastBarrier + 50,
+			Result: helpers.BipToPip(big.NewInt(6670)),
 		},
 	}
 
