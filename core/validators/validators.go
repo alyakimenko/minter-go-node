@@ -4,10 +4,10 @@ var startHeight uint64 = 0
 
 func GetValidatorsCountForBlock(block uint64) int {
 	block += startHeight
-	count := 16 + (block/518400)*4
+	count := 6 + (block/518400)*2
 
-	if count > 256 {
-		return 256
+	if count > 50 {
+		return 50
 	}
 
 	return int(count)
