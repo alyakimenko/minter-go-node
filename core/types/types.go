@@ -164,12 +164,12 @@ func BytesToAddress(b []byte) Address {
 }
 func StringToAddress(s string) Address { return BytesToAddress([]byte(s)) }
 func BigToAddress(b *big.Int) Address  { return BytesToAddress(b.Bytes()) }
-func HexToAddress(s string) Address    { return BytesToAddress(FromHex(s, "Mx")) }
+func HexToAddress(s string) Address    { return BytesToAddress(FromHex(s, "Od")) }
 
 // IsHexAddress verifies whether a string can represent a valid hex-encoded
 // Minter address or not.
 func IsHexAddress(s string) bool {
-	if hasHexPrefix(s, "Mx") {
+	if hasHexPrefix(s, "Od") {
 		s = s[2:]
 	}
 	return len(s) == 2*AddressLength && isHex(s)
@@ -182,7 +182,7 @@ func (a Address) Big() *big.Int { return new(big.Int).SetBytes(a[:]) }
 func (a Address) Hash() Hash    { return BytesToHash(a[:]) }
 
 func (a Address) Hex() string {
-	return "Mx" + hex.EncodeToString(a[:])
+	return "Od" + hex.EncodeToString(a[:])
 }
 
 // String implements the stringer interface and is used also by the logger.
@@ -257,7 +257,7 @@ func (a UnprefixedAddress) MarshalText() ([]byte, error) {
 
 type Pubkey [32]byte
 
-func HexToPubkey(s string) Pubkey { return BytesToPubkey(FromHex(s, "Mp")) }
+func HexToPubkey(s string) Pubkey { return BytesToPubkey(FromHex(s, "Op")) }
 
 func BytesToPubkey(b []byte) Pubkey {
 	var p Pubkey
@@ -275,7 +275,7 @@ func (p *Pubkey) SetBytes(b []byte) {
 func (p Pubkey) Bytes() []byte { return p[:] }
 
 func (p Pubkey) String() string {
-	return fmt.Sprintf("Mp%x", p[:])
+	return fmt.Sprintf("Op%x", p[:])
 }
 
 func (p Pubkey) MarshalText() ([]byte, error) {

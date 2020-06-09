@@ -121,7 +121,7 @@ func TestComplexDelegate(t *testing.T) {
 
 		st.Candidates.RecalculateStakes(height)
 
-		replacedAddress := types.HexToAddress("Mx00000000000003e7000000000000000000000000")
+		replacedAddress := types.HexToAddress("Od00000000000003e7000000000000000000000000")
 		stake := st.Candidates.GetStakeOfAddress(pubkey, replacedAddress, coin)
 		if stake != nil {
 			t.Fatalf("Stake of address %s found, but should not be", replacedAddress.String())
@@ -149,7 +149,7 @@ func TestComplexDelegate(t *testing.T) {
 			t.Fatalf("Stake of address %s not found, but should be", addr.String())
 		}
 
-		replacedAddress := types.HexToAddress("Mx00000000000003e5000000000000000000000000")
+		replacedAddress := types.HexToAddress("Od00000000000003e5000000000000000000000000")
 		stake = st.Candidates.GetStakeOfAddress(pubkey, replacedAddress, coin)
 		if stake != nil {
 			t.Fatalf("Stake of address %s found, but should not be", replacedAddress.String())

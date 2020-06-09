@@ -42,15 +42,15 @@ func TestIsHexAddress(t *testing.T) {
 		str string
 		exp bool
 	}{
-		{"Mx5aaeb6053f3e94c9b9a09f33669435e7ef1beaed", true},
+		{"Od5aaeb6053f3e94c9b9a09f33669435e7ef1beaed", true},
 		{"5aaeb6053f3e94c9b9a09f33669435e7ef1beaed", true},
-		{"Mx5aaeb6053f3e94c9b9a09f33669435e7ef1beaed", true},
-		{"MxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", true},
-		{"MxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", true},
-		{"Mx5aaeb6053f3e94c9b9a09f33669435e7ef1beaed1", false},
-		{"Mx5aaeb6053f3e94c9b9a09f33669435e7ef1beae", false},
+		{"Od5aaeb6053f3e94c9b9a09f33669435e7ef1beaed", true},
+		{"OdAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", true},
+		{"OdAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", true},
+		{"Od5aaeb6053f3e94c9b9a09f33669435e7ef1beaed1", false},
+		{"Od5aaeb6053f3e94c9b9a09f33669435e7ef1beae", false},
 		{"5aaeb6053f3e94c9b9a09f33669435e7ef1beaed11", false},
-		{"Mxxaaeb6053f3e94c9b9a09f33669435e7ef1beaed", false},
+		{"Odxaaeb6053f3e94c9b9a09f33669435e7ef1beaed", false},
 	}
 
 	for _, test := range tests {
@@ -67,12 +67,12 @@ func TestHashJsonValidation(t *testing.T) {
 		Size   int
 		Error  string
 	}{
-		{"", 62, "json: cannot unmarshal hex string without Mx prefix into Go value of type types.Hash"},
-		{"Mx", 66, "hex string has length 66, want 64 for types.Hash"},
-		{"Mx", 63, "json: cannot unmarshal hex string of odd length into Go value of type types.Hash"},
-		{"Mx", 0, "hex string has length 0, want 64 for types.Hash"},
-		{"Mx", 64, ""},
-		{"Mx", 64, ""},
+		{"", 62, "json: cannot unmarshal hex string without Od prefix into Go value of type types.Hash"},
+		{"Od", 66, "hex string has length 66, want 64 for types.Hash"},
+		{"Od", 63, "json: cannot unmarshal hex string of odd length into Go value of type types.Hash"},
+		{"Od", 0, "hex string has length 0, want 64 for types.Hash"},
+		{"Od", 64, ""},
+		{"Od", 64, ""},
 	}
 	for _, test := range tests {
 		input := `"` + test.Prefix + strings.Repeat("0", test.Size) + `"`
@@ -98,11 +98,11 @@ func TestAddressUnmarshalJSON(t *testing.T) {
 	}{
 		{"", true, nil},
 		{`""`, true, nil},
-		{`"Mx"`, true, nil},
-		{`"Mx00"`, true, nil},
-		{`"MxG000000000000000000000000000000000000000"`, true, nil},
-		{`"Mx0000000000000000000000000000000000000000"`, false, big.NewInt(0)},
-		{`"Mx0000000000000000000000000000000000000010"`, false, big.NewInt(16)},
+		{`"Od"`, true, nil},
+		{`"Od00"`, true, nil},
+		{`"OdG000000000000000000000000000000000000000"`, true, nil},
+		{`"Od0000000000000000000000000000000000000000"`, false, big.NewInt(0)},
+		{`"Od0000000000000000000000000000000000000010"`, false, big.NewInt(16)},
 	}
 	for i, test := range tests {
 		var v Address
@@ -129,7 +129,7 @@ func BenchmarkAddressHex(b *testing.B) {
 }
 
 func TestAppState(t *testing.T) {
-	testAddr := HexToAddress("Mx5aaeb6053f3e94c9b9a09f33669435e7ef1beaed")
+	testAddr := HexToAddress("Od5aaeb6053f3e94c9b9a09f33669435e7ef1beaed")
 	pubkey := Pubkey{1, 2, 3}
 	ba := NewBitArray(24)
 	ba.SetIndex(3, true)

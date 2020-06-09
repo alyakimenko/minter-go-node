@@ -54,7 +54,7 @@ func (m *Manager) Dashboard(_ *empty.Empty, stream pb.ManagerService_DashboardSe
 			if err != nil {
 				return status.Error(codes.Internal, err.Error())
 			}
-			pubKey := fmt.Sprintf("Mp%x", resultStatus.ValidatorInfo.PubKey.Bytes()[5:])
+			pubKey := fmt.Sprintf("Op%x", resultStatus.ValidatorInfo.PubKey.Bytes()[5:])
 
 			state, err := m.blockchain.GetStateForHeight(0)
 			if err != nil {

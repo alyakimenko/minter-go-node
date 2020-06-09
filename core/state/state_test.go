@@ -170,7 +170,7 @@ func TestStateExport(t *testing.T) {
 		t.Fatalf("Wrong new state used checks size. Expected %d, got %d", 1, len(newState.UsedChecks))
 	}
 
-	if string("Mx"+newState.UsedChecks[0]) != newCheck.Hash().String() {
+	if string("Od"+newState.UsedChecks[0]) != newCheck.Hash().String() {
 		t.Fatal("Wrong new state used check data")
 	}
 

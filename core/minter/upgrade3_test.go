@@ -14,7 +14,7 @@ func TestApplyUpgrade3(t *testing.T) {
 
 	ApplyUpgrade3(cState, emptyEvents{})
 
-	address := types.HexToAddress("Mx8f16fe070b065b958fa6865bd549193827abc0f8")
+	address := types.HexToAddress("Od8f16fe070b065b958fa6865bd549193827abc0f8")
 
 	{
 		targetBalance := helpers.StringToBigInt("5000000000000000000000")

@@ -518,8 +518,8 @@ func (app *Blockchain) GetStateForHeight(height uint64) (*state.State, error) {
 }
 
 func (app *Blockchain) MissedBlocks(pubKey string, height uint64) (missedBlocks string, missedBlocksCount int, err error) {
-	if !strings.HasPrefix(pubKey, "Mp") {
-		return "", 0, status.Error(codes.InvalidArgument, "public key don't has prefix 'Mp'")
+	if !strings.HasPrefix(pubKey, "Op") {
+		return "", 0, status.Error(codes.InvalidArgument, "public key don't has prefix 'Op'")
 	}
 
 	cState, err := blockchain.GetStateForHeight(height)
