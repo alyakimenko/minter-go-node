@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/MinterTeam/minter-go-node/api"
 	"github.com/MinterTeam/minter-go-node/core/code"
 	"github.com/MinterTeam/minter-go-node/core/commissions"
 	"github.com/MinterTeam/minter-go-node/core/state"
@@ -11,7 +12,10 @@ import (
 	"github.com/MinterTeam/minter-go-node/formula"
 	"github.com/tendermint/tendermint/libs/kv"
 	"math/big"
+	"strconv"
 )
+
+const MissedBlocksLimit = 100_000
 
 type SetCandidateOnData struct {
 	PubKey types.Pubkey
@@ -93,6 +97,26 @@ func (data SetCandidateOnData) Run(tx *Transaction, context *state.State, isChec
 	}
 
 	if !isCheck {
+		missedBlockResponse, err := api.MissedBlocks(data.PubKey, int(currentBlock))
+		if err != nil {
+			return Response{
+				Code: code.DecodeError,
+			}
+		}
+
+		// Check to see if the validator can be unblocked.
+		if missedBlockResponse.MissedBlocksCount < MissedBlocksLimit {
+			missedBlocksCountStr := strconv.Itoa(missedBlockResponse.MissedBlocksCount)
+			return Response{
+				Code: code.CandidateBlocked,
+				Log:  fmt.Sprintf("Candidate blocked for a %d blocks", MissedBlocksLimit),
+				Info: EncodeError(map[string]string{
+					"candidate":                   data.PubKey.String(),
+					"current_missed_blocks_count": missedBlocksCountStr,
+				}),
+			}
+		}
+
 		rewardPool.Add(rewardPool, commissionInBaseCoin)
 
 		context.Coins.SubReserve(tx.GasCoin, commissionInBaseCoin)
