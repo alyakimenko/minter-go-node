@@ -4,13 +4,14 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/MinterTeam/minter-go-node/api"
 	"github.com/MinterTeam/minter-go-node/core/code"
 	"github.com/MinterTeam/minter-go-node/core/commissions"
 	"github.com/MinterTeam/minter-go-node/core/state"
 	"github.com/MinterTeam/minter-go-node/core/types"
 	"github.com/MinterTeam/minter-go-node/formula"
 	"github.com/tendermint/tendermint/libs/kv"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"math/big"
 	"strconv"
 )
@@ -97,7 +98,8 @@ func (data SetCandidateOnData) Run(tx *Transaction, context *state.State, isChec
 	}
 
 	if !isCheck {
-		missedBlockResponse, err := api.MissedBlocks(data.PubKey, int(currentBlock))
+
+		_, missedBlocksCount, err := MissedBlocks(context, data.PubKey.String(), int(currentBlock))
 		if err != nil {
 			return Response{
 				Code: code.DecodeError,
@@ -105,8 +107,8 @@ func (data SetCandidateOnData) Run(tx *Transaction, context *state.State, isChec
 		}
 
 		// Check to see if the validator can be unblocked.
-		if missedBlockResponse.MissedBlocksCount < MissedBlocksLimit {
-			missedBlocksCountStr := strconv.Itoa(missedBlockResponse.MissedBlocksCount)
+		if missedBlocksCount < MissedBlocksLimit {
+			missedBlocksCountStr := strconv.Itoa(missedBlocksCount)
 			return Response{
 				Code: code.CandidateBlocked,
 				Log:  fmt.Sprintf("Candidate blocked for a %d blocks", MissedBlocksLimit),
@@ -237,4 +239,22 @@ func (data SetCandidateOffData) Run(tx *Transaction, context *state.State, isChe
 		GasWanted: tx.Gas(),
 		Tags:      tags,
 	}
+}
+
+func MissedBlocks(context *state.State, pubKey string, height int) (missedBlocks string, missedBlocksCount int, err error) {
+	if height != 0 {
+		context.Lock()
+		context.Validators.LoadValidators()
+		context.Unlock()
+	}
+
+	context.RLock()
+	defer context.RUnlock()
+
+	val := context.Validators.GetByPublicKey(types.HexToPubkey(pubKey))
+	if val == nil {
+		return "", 0, status.Error(codes.NotFound, "Validator not found")
+	}
+
+	return val.AbsentTimes.String(), val.CountAbsentTimes(), nil
 }
